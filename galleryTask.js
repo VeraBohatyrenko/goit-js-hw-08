@@ -11,7 +11,7 @@ let activeIndex = 0;
 
 /** Создание списка галереи */
 const task = gallery
-  .map(({ preview, original, description, index }) => {
+  .map(({ preview, original, description }, index) => {
     return ` 
     <li class="gallery__item">
     <a
