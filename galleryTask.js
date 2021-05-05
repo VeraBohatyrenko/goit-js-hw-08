@@ -35,12 +35,14 @@ galleryContainer.insertAdjacentHTML("beforeend", task);
 
 function openModalfn(e) {
   e.preventDefault();
-  if (e.target.nodeName === "IMG") {
-    modalRef.classList.add("is-open");
-    imgModalRef.src = e.target.dataset.source;
+  if (e.target.nodeName !== "IMG") {
+    return;
   }
-  closeEscFn();
-  carouselFn();
+  modalRef.classList.add("is-open");
+  imgModalRef.src = e.target.dataset.source;
+  window.addEventListener("keydown", onPressArrow);
+  window.addEventListener("keydown", onPressEsc);
+  activeIndex = Number(e.target.dataset.index);
 }
 /** Добавляет слушатель события на ul (только на IMG) для открытия модалки */
 galleryContainer.addEventListener("click", openModalfn);
@@ -48,18 +50,18 @@ galleryContainer.addEventListener("click", openModalfn);
 function closeModalfn() {
   modalRef.classList.remove("is-open");
   imgModalRef.removeAttribute("src");
+  window.removeEventListener("keydown", onPressArrow);
+  window.removeEventListener("keydown", onPressEsc);
 }
 /** Добавляет слушатель события на закрытие модалки через кнопку */
 btnCloseModalRef.addEventListener("click", closeModalfn);
 /** Добавляет слушатель события на закрытие модалки через оверлей */
 overlayBoxRef.addEventListener("click", closeModalfn);
 
-function closeEscFn() {
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeModalfn();
-    }
-  });
+function onPressEsc(e) {
+  if (e.key === "Escape") {
+    closeModalfn();
+  }
 }
 
 /** Ф-ия "Карусели" перелистывает картинки клавишами право/лево */
@@ -72,8 +74,4 @@ function onPressArrow(e) {
     activeIndex += 1;
     imgModalRef.src = gallery[activeIndex].original;
   }
-}
-
-function carouselFn() {
-  window.addEventListener("keydown", onPressArrow);
 }
